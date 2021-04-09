@@ -16,7 +16,7 @@ function checksExistsUserAccount(request, response, next) {
   const user = users.find(user => user.username === username)
 
     if (!user){
-        return response.status(400).json({error: "Username not found"})
+        return response.status(404).json({error: "Username not found"})
     }
 
     request.user = user
@@ -62,7 +62,7 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
     created_at: new Date()
   }
 
-  response.user.todos.push(todo)
+  request.user.todos.push(todo)
 
   return response.status(201).send()
 });
@@ -71,7 +71,7 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
   // Complete aqui
   const {title, deadline} = request.body
   const {id} = request.params
-  const todo = response.user.todos.find(todo => todo.id === id)
+  const todo = request.user.todos.find(todo => todo.id === id)
 
   if (!todo){
     return response.status(404).json({error: "ToDo inexistente!"})
@@ -86,7 +86,7 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
   // Complete aqui
   const {id} = request.params
-  const todo = response.user.todos.find(todo => todo.id === id)
+  const todo = request.user.todos.find(todo => todo.id === id)
 
   todo.done = true
   
@@ -96,13 +96,13 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
   // Complete aqui
   const {id} = request.params
-  const todo = response.user.todos.find(todo => todo.id === id)
+  const todo = request.user.todos.find(todo => todo.id === id)
 
   if (!todo){
     return response.status(404).json({error: "ToDo inexistente!"})
   }
 
-  response.user.todos.splice(todo,1)
+  request.user.todos.splice(todo,1)
 
   return response.status(204).send()
 });
