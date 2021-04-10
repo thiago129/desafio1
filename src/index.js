@@ -36,7 +36,7 @@ app.post('/users', (request, response) => {
   }
 
   if (users.some(user => user.username === username)){
-    return response.status(404).json({error: "Usuário já existe"})
+    return response.status(400).json({error: "Usuário já existe"})
   }
 
   users.push(user)
@@ -80,7 +80,7 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
   todo.title = title
   todo.deadline = deadline
 
-  return response.status(201).send()
+  return response.send()
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
@@ -91,10 +91,10 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
   if (!todo){
     return response.status(404).json({error: "ToDo inexistente!"})
   }
-  
+
   todo.done = true
   
-  return response.status(201).send()
+  return response.send()
 });
 
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
