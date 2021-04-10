@@ -64,7 +64,7 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
 
   request.user.todos.push(todo)
 
-  return response.status(201).send()
+  return response.status(201).json(todo)
 });
 
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
@@ -87,7 +87,11 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
   // Complete aqui
   const {id} = request.params
   const todo = request.user.todos.find(todo => todo.id === id)
-
+  
+  if (!todo){
+    return response.status(404).json({error: "ToDo inexistente!"})
+  }
+  
   todo.done = true
   
   return response.status(201).send()
